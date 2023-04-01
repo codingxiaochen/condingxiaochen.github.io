@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8">
+		<title>小陈主页</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			body {
+				font-family: Arial, sans-serif;
+				text-align: center;
+				/* background: linear-gradient(to bottom, #00c6ff, #0072ff); */
+				background: #1c2331;
+			}
+
+			.center {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+			}
+
+			h1 {
+				font-size: 48px;
+				/* margin-top: 100px; */
+				color: aquamarine;
+			}
+
+			#name {
+				font-size: 72px;
+				font-weight: bold;
+				color: cyan;
+				margin-bottom: 30px;
+			}
+
+			#text-container {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 50px;
+				margin-bottom: 50px;
+			}
+
+			#text {
+				font-size: 1.5em;
+				font-weight: bold;
+				color: #fff;
+				white-space: nowrap;
+				overflow: hidden;
+				/* animation: typing 2s steps(20) infinite; */
+			}
+
+			/* @keyframes typing {
+				from {
+					width: 0;
+				}
+
+				to {
+					width: 100rem;
+				}
+			} */
+
+			/* 设置页脚的样式 */
+			footer {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				text-align: center;
+				font-size: 1.4em;
+				padding: 20px 0;
+				color: #fff;
+				/* background-color: rgba(0, 0, 0, 0.01); */
+			}
+			
+			/* 搭配canvas */
+			#canvas {
+				display: block;
+				position: fixed;
+				z-index: -10;
+			}
+
+
+			/*设置雪花样式*/
+		/* 	.snow-container {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+			} */
+
+			/* 雪花样式 */
+			/* .snow {
+				position: absolute;
+				width: 10px;
+				height: 10px;
+				border-radius: 50%;
+				background-color: #fff;
+				animation-name: snow-fall;
+				animation-duration: 10s;
+				animation-iteration-count: infinite;
+				animation-timing-function: linear;
+			}
+
+			@keyframes snow-fall {
+				from {
+					transform: translateY(-50px);
+				}
+
+				to {
+					transform: translateY(100vh);
+				}
+			} */
+		</style>
+	</head>
+	<body>
+		<canvas id="canvas"></canvas>
+		<h1 id="date"></h1>
+		<h1 id="time"></h1>
+		<div class="center">
+			<div id="name">小陈</div>
+			<div id="text-container">
+				<div id="text"></div>
+				<span id="bar" style="display: none;"></span>
+			</div>
+		</div>
+		<!-- 绘制雪花 -->
+		<!-- <div class="snow-container">
+			<div class="snow"></div>
+			<div class="snow"></div>
+			<div class="snow"></div>
+		</div> -->
+
+		<!-- 另一个绘制雪花代码canvas绘制 -->
+		<footer>
+			<p>&copy; 2023 XiaoChen. All rights reserved.</p>
+		</footer>
+		<script>
+			window.onload = function() {
+				// 设置时间
+				function showDateTime() {
+					var now = new Date();
+					var year = now.getFullYear();
+					var month = addZero(now.getMonth() + 1);
+					var day = addZero(now.getDate());
+					var hours = addZero(now.getHours());
+					var minutes = addZero(now.getMinutes());
+					var seconds = addZero(now.getSeconds());
+					var dateString = year + "年" + month + "月" + day + "日";
+					var timeString = hours + ":" + minutes + ":" + seconds;
+					var str = dateString + " " + timeString;
+					document.getElementById("date").innerHTML = str;
+					// document.getElementById("date").innerHTML = timeString;
+				}
+
+				function addZero(num) {
+					return (num < 10 ? "0" : "") + num;
+				}
+				setInterval(showDateTime, 1000);
+
+				// 打字效果
+				var i = 0;
+				var strList = [
+					"开头很简单, 最难的是坚持。",
+					"为了能到远方, 脚下的每一步都不能少。",
+					"花开堪折直须折, 莫待无花空折枝。",
+					"一件事情不付诸实践，即使在心里想一万遍也是徒然。",
+					"一沙一世界，一花一天堂。君掌盛无边，刹那成永恒。",
+					"我们登上的并非我们所选择的舞台，演出并非我们所选择的剧本。",
+					"不闻不若闻之，闻之不若见之，见之不若知之，知之不若行之",
+					"闻见知行,学至于行之而止矣",
+					"拥有知识的错觉，比没有知识更可怕！",
+					"如果你只做能力范围之内的事，你就永远不会有进步！",
+					"没有落魄的行业，只有落魄的人！",
+					"业精于勤荒于嬉，行成于思毁于随! ",
+					"路漫漫其修远兮，吾将上下而求索。",
+					"心有山海, 矜而不争！",
+					"临渊羡鱼, 不如退而结网。",
+					"一往无前虎山行, 拨开云雾见光明。",
+					"让我们面对现实 让我们忠于理想",
+					"朝闻道，夕可眠矣。",
+					"只要路是对的，就不怕路远。",
+					"没有什么事是一蹴而就的，但是坚持下去，就会发现很多事情都能变得简单。",
+					"不要轻易放弃自己的梦想，只有坚持不懈才能让梦想成真。",
+					"做自己的梦想，让别人去说吧。",
+					"没有什么能够阻挡你前进的步伐，只要你肯努力，一切皆有可能。",
+					"无论你身处何地，都应该保持一颗感恩的心，珍惜所拥有的一切。",
+					"不要停留在过去，珍惜现在，放眼未来。",
+					"越是努力，越是幸运。",
+					"永远不要放弃追求自己的目标和梦想，因为这才是你真正想要的东西。",
+					"世界上没有捷径可走，只有不断地奋斗，才能得到自己想要的东西。",
+					"常思奋不顾身，而殉国家之急。",
+					"别低头，王冠会掉，别流泪，坏人会笑。",
+					"阅读的最大理由是想摆脱平庸，早一天就多一份人生的精彩",
+					"土扶可城墙，积德为厚地。",
+					"有时候，不是对方不在乎你，而是你把对方看的太重。",
+					"也许路途很遥远，也许这条路很危险，但是我眼中的风景，是你想像不到的耀眼。",
+					"人生就是不停的战斗，醒来吧，沉睡的人。",
+					"我不完美，但你未见得很爱美。我想完美，难怪被你太早放弃。",
+					"没有人可以回到过去重新开始，但谁都可以从现在开始，书写一个全然不同的结局。",
+					"不要忽视小节，宇宙由原子构成。得到帮助的方式是开始帮助别人",
+					"一个今天胜过两个明天。蓝天属于你，白云属于你，东南西风属于你。",
+					"困，你是人类艺术的源泉，你将伟大的灵感赐予诗人。",
+					"人只要不失去方向，就不会失去自我。",
+					"不论你在什么时候结束，重要的是结束之后就不要悔恨。",
+					"经验是由痛苦中粹取出来的。",
+					"别人能够拷贝我的模式，不能拷贝我的苦难，不能拷贝我不断往前的活力。",
+					"如果你曾歌颂黎明，那麽也请你拥抱黑夜。",
+					"人与人之间的差距，是天生就这么大，还是因为不能狠下心来逼自我？",
+					"人生那么短，为什么要让不重要的人，影响自我重要的心境。",
+					"与其在别人的生活里跑龙套，不如精彩做自己。",
+					"如果你的生活已处于低谷，那就，大胆走，因为你怎样走都是在向上。",
+					"如果不想做点事情，就甭想到达这个世界上的任何地方。",
+					"成功与不成功之间有时距离很短——只要后者再向前几步。",
+					"那些尝试去做某事却失败的人，比那些什么也不尝试做却成功的人不知要好上多少。",
+					"收起羡慕别人的目光自己去努力。",
+					"如果不想做点事情，就不好想到达这个世界上的任何地方。",
+					"不但要看别人愿意为你做什么，也要看别人不愿为你做什么。不愿意，代表底线。",
+					"遍体鳞伤后才知道，成功不是不够努力，成功是决不放弃。"
+				];
+				var strLen = strList.length;
+				var rand = Math.round(Math.random() * strLen)
+				var str = strList[rand];
+
+				function typing() {
+					var text = document.getElementById("text");
+					document.getElementById("bar").style.cssText = "display:none";
+					text.innerHTML = str.substring(0, i++) + (i > str.length ? "" : "|");
+					var typingTimer = setTimeout(typing, 150);
+					if (i > str.length) {
+						clearTimeout(typingTimer);
+						// 竖杠闪烁效果
+						var twinkleTimer = setInterval(twinkle, 100);
+						setTimeout(function() {
+							clearInterval(twinkleTimer);
+							document.getElementById("bar").style.cssText = "display:none";
+							//自动删除文字效果
+							deleteText();
+						}, 100);
+					}
+				}
+
+				//自动删除文字效果
+				function deleteText() {
+					var text = document.getElementById("text");
+					text.innerHTML = str.substring(0, i--) + "|";
+					var deleteTextTimer = setTimeout(deleteText, 50);
+					if (i < 0) {
+						clearTimeout(deleteTextTimer);
+						//删除完后，自动打字，达到循环, 防止重复。
+						randtemp = Math.round(Math.random() * strLen)
+						while (randtemp == rand || randtemp >= strLen) {
+							randtemp = Math.round(Math.random() * strLen)
+						}
+						rand = randtemp;
+						str = strList[rand];
+						// console.log(rand,str)
+						typing();
+					}
+				}
+
+				// 竖杠闪烁效果
+				var flag = 0;
+
+				function twinkle() {
+					if (flag) {
+						document.getElementById("bar").style.cssText = "color:#fff;";
+						flag = 0;
+					} else {
+						document.getElementById("bar").style.cssText = "color:#ffffff47;";
+						flag = 1;
+					}
+				}
+
+				typing();
+
+
+				// 搭配canvas绘制雪花代码
+				const canvas = document.getElementById("canvas");
+				const ctx = canvas.getContext("2d");
+				let width, height;
+				let flakes = [];
+
+				function setup() {
+					width = canvas.width = window.innerWidth;
+					height = canvas.height = window.innerHeight;
+					createSnowflakes(200);
+					loop();
+				}
+
+				function loop() {
+					ctx.clearRect(0, 0, width, height);
+
+					for (let i = 0; i < flakes.length; i++) {
+						let flake = flakes[i];
+						flake.y += flake.speed;
+						flake.x += Math.sin(flake.angle) * flake.drift;
+
+						// 碰到底部，重置雪花位置
+						if (flake.y > height) {
+							flake.y = -flake.size;
+							flake.x = Math.random() * width;
+						}
+
+						// 画出雪花
+						ctx.beginPath();
+						ctx.arc(flake.x, flake.y, flake.size, 0, Math.PI * 2);
+						ctx.fillStyle = "white";
+						ctx.fill();
+					}
+
+					requestAnimationFrame(loop);
+				}
+
+				function createSnowflakes(num) {
+					for (let i = 0; i < num; i++) {
+						flakes.push({
+							x: Math.random() * width,
+							y: Math.random() * height,
+							size: Math.random() * 3 + 2,
+							speed: Math.random() * 2 + 1,
+							angle: Math.random() * Math.PI * 2,
+							drift: Math.random() * 0.5 - 0.25,
+						});
+					}
+				}
+
+				window.addEventListener("resize", function() {
+					width = canvas.width = window.innerWidth;
+
+					height = canvas.height = window.innerHeight;
+				});
+
+				setup();
+			};
+		</script>
+	</body>
+</html>
